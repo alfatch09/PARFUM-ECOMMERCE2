@@ -3,28 +3,40 @@ import { Link } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { products } from '../data';
 import ProductCard from '../components/ProductCard';
-import './Home.css'
+import bgVideo from '../assets/vid.mp4'; // 
+import './Home.css';
+
 const HomePage = () => {
   const featuredProducts = products.slice(0, 3);
 
   return (
     <>
-      {/* Hero Section */}
-      <div className="text-center text-white bg-dark py-5" style={{ 
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(/src/assets/hero-perfume.jpg)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          minHeight: '60vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-      }}>
-        <Container>
-            <h1 className="display-4 fw-bold">Discover Your Signature Scent</h1>
-            <p className="lead my-4">Unforgettable fragrances for every moment.</p>
-            <Button as={Link} to="/collection" variant="light" size="lg">
-              Shop Collection
-            </Button>
+      {/* Hero Section with Video Background */}
+      <div className="hero-video-container position-relative text-white text-center overflow-hidden" style={{ minHeight: '60vh' }}>
+        
+        {/* Background Video */}
+        <video
+          className="position-absolute top-0 start-0 w-100 h-100"
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{ objectFit: 'cover', zIndex: '-1' }}
+        >
+          <source src={bgVideo} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+
+        {/* Optional dark overlay */}
+        <div className="position-absolute top-0 start-0 w-100 h-100" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: '0' }}></div>
+
+        {/* Hero content */}
+        <Container className="position-relative d-flex flex-column justify-content-center align-items-center h-100" style={{ zIndex: '1' }}>
+          <h1 className="display-4 fw-bold">Discover Your Signature Scent</h1>
+          <p className="lead my-4">Unforgettable fragrances for every moment.</p>
+          <Button as={Link} to="/collection" variant="light" size="lg">
+            Shop Collection
+          </Button>
         </Container>
       </div>
 
