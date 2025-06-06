@@ -1,13 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Container, Row, Col, Image, Button } from 'react-bootstrap';
-import { products } from '../data.js';
+import { Container, Row, Col, Image, Button, Spinner } from 'react-bootstrap';
 import { useCart } from '../context/CartContext';
+import axios from 'axios';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
   const { addToCart } = useCart();
-  const product = products.find(p => p.id === parseInt(id));
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchProduct = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+      setProduct(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Failed to fetch product:', error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProduct();
+  }, [id]);
+
+  const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+  }).format(amount);
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    alert(`${product.name} added to cart!`);
+  };
+
+  if (loading) {
+    return (
+      <Container className="text-center py-5">
+        <Spinner animation="border" />
+        <p>Loading...</p>
+      </Container>
+    );
+  }
 
   if (!product) {
     return (
@@ -17,17 +53,6 @@ const ProductDetailPage = () => {
       </Container>
     );
   }
-
-  const formattedPrice = new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-  }).format(product.price);
-
-  const handleAddToCart = () => {
-    addToCart(product);
-    alert(`${product.name} added to cart!`);
-  };
 
   return (
     <Container className="py-5">
@@ -47,7 +72,7 @@ const ProductDetailPage = () => {
           </Link>
           <h1 className="display-5 fw-bold">{product.name}</h1>
           <p className="fs-5 text-muted">{product.brand}</p>
-          <p className="display-6 fw-semibold my-3">{formattedPrice}</p>
+          <p className="display-6 fw-semibold my-3">{formatCurrency(product.price)}</p>
           <p className="lead">{product.description}</p>
           <div className="my-4">
             <h5 className="fw-semibold">Scent Notes:</h5>

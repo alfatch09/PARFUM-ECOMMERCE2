@@ -1,23 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { Link } from 'react-router-dom';
-import { Container, Button, ListGroup, Image, Row, Col, Card } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import {
+  Container, Button, ListGroup, Image, Row, Col, Card, Modal,
+} from 'react-bootstrap';
 import { FaTrash } from 'react-icons/fa';
 
 const CartPage = () => {
-  const { cartItems, removeFromCart, getCartTotal } = useCart();
-  
-  const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-  }).format(amount);
+  const { cartItems, removeFromCart, getCartTotal, clearCart } = useCart();
+  const [showPayment, setShowPayment] = useState(false);
+  const navigate = useNavigate();
+
+  const formatCurrency = (amount) =>
+    new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    }).format(amount);
+
+  const handlePaymentClick = () => setShowPayment(true);
+
+  const handleConfirmPayment = () => {
+    clearCart(); // Kosongkan keranjang
+    setShowPayment(false); // Tutup modal
+    navigate('/thankyou'); // Arahkan ke halaman thank you
+  };
 
   if (cartItems.length === 0) {
     return (
       <Container className="text-center py-5">
         <h1 className="fw-bold">Your Cart is Empty</h1>
-        <Link to="/collection">Start Shopping</Link>
+        <Button variant="dark" onClick={() => navigate('/collection')}>
+          Start Shopping
+        </Button>
       </Container>
     );
   }
@@ -43,22 +58,50 @@ const CartPage = () => {
             ))}
           </ListGroup>
         </Col>
+
         <Col md={4}>
-            <Card>
-                <Card.Body>
-                    <Card.Title className="fs-4">Order Summary</Card.Title>
-                    <hr/>
-                    <div className="d-flex justify-content-between fs-5 fw-bold">
-                        <span>Total</span>
-                        <span>{formatCurrency(getCartTotal())}</span>
-                    </div>
-                    <Button as={Link} to="/payment" variant="dark" className="w-100 mt-3">
-                        Proceed to Payment
-                    </Button>
-                </Card.Body>
-            </Card>
+          <Card>
+            <Card.Body>
+              <Card.Title className="fs-4">Order Summary</Card.Title>
+              <hr />
+              <div className="d-flex justify-content-between fs-5 fw-bold">
+                <span>Total</span>
+                <span>{formatCurrency(getCartTotal())}</span>
+              </div>
+              <Button variant="dark" className="w-100 mt-3" onClick={handlePaymentClick}>
+                Proceed to Payment
+              </Button>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
+
+      {/* Modal Pembayaran */}
+      <Modal show={showPayment} onHide={() => setShowPayment(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Payment Instructions</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Silakan lakukan pembayaran ke:</p>
+          <ul>
+            <li><strong>Bank:</strong> BCA</li>
+            <li><strong>No. Rek:</strong> 1234567890</li>
+            <li><strong>Nama:</strong> PT. MAHA PARFUME</li>
+          </ul>
+          <p>Atau scan QRIS di bawah ini:</p>
+          <img
+            src="/src/assets/qris.jpg"
+            alt="QRIS"
+            className="img-fluid border rounded"
+          />
+          <p className="text-muted mt-3"><small>Setelah melakukan pembayaran, klik tombol di bawah ini.</small></p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleConfirmPayment}>
+            Saya Sudah Bayar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
