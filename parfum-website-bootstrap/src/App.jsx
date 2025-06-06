@@ -9,6 +9,8 @@ import CartPage from './pages/CartPage';
 import PaymentPage from './pages/PaymentPage';
 import LoginPage from './pages/LoginPage';
 import AboutPage from './pages/AboutPage';
+import TeamsPage from './pages/TeamsPage';
+import ThankYou from './pages/Thankyou';
 import { Container } from 'react-bootstrap';
 
 function App() {
@@ -17,6 +19,8 @@ function App() {
       <NavbarComponent />
       <main className="flex-grow-1">
         <Routes>
+          <Route path="/thankyou" element={<ThankYou />} />
+          <Route path="/teams" element={<TeamsPage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/collection" element={<CollectionPage />} />
           <Route path="/product/:id" element={<ProductDetailPage />} />

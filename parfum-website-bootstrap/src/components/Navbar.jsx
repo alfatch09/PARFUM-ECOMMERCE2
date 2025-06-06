@@ -12,12 +12,13 @@ const NavbarComponent = () => {
   return (
     <Navbar bg="light" expand="lg" className="shadow-sm sticky-top">
       <Container>
-        <Navbar.Brand as={Link} to="/" className="fw-bold fs-4">AURA</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/" className="fw-bold fs-4">MAHA PARFUM</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto align-items-center">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
             <Nav.Link as={Link} to="/collection">Collection</Nav.Link>
+            <Nav.Link as={Link} to="/teams">Teams</Nav.Link>
             <Nav.Link as={Link} to="/about">About</Nav.Link>
             <Nav.Link as={Link} to="/login">Login</Nav.Link>
             <Nav.Link as={Link} to="/cart" className="position-relative">
