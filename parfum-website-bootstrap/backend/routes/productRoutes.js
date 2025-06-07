@@ -1,20 +1,27 @@
 import express from 'express';
-import Product from '../models/Product.js';
+import {
+  getAllProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct
+} from '../controllers/productController.js';
 
 const router = express.Router();
 
-// GET /api/products/:id
-router.get('/:id', async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    if (product) {
-      res.json(product);
-    } else {
-      res.status(404).json({ message: 'Product not found' });
-    }
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-});
+// GET semua produk
+router.get('/', getAllProducts);
+
+// GET produk by ID
+router.get('/:id', getProductById);
+
+// POST tambah produk baru
+router.post('/', createProduct);
+
+// PUT update produk by ID
+router.put('/:id', updateProduct);
+
+// DELETE hapus produk by ID
+router.delete('/:id', deleteProduct);
 
 export default router;

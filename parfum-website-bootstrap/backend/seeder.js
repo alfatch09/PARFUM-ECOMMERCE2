@@ -13,7 +13,7 @@ const products = [
     price: 1250000,
     description: 'A fresh and spicy fragrance for men.',
     notes: 'Bergamot, Pepper, Ambroxan',
-    image: 'https://example.com/dior-sauvage.jpg'
+    image: 'src/assets/fanny.jpg'
   },
   {
     name: 'Chanel No. 5',
