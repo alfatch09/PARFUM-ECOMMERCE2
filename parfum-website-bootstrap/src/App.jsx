@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import NavbarComponent from './components/Navbar'; // Ganti nama agar tidak bentrok
+import NavbarComponent from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import CollectionPage from './pages/CollectionPage';
@@ -11,7 +11,6 @@ import LoginPage from './pages/LoginPage';
 import AboutPage from './pages/AboutPage';
 import TeamsPage from './pages/TeamsPage';
 import ThankYou from './pages/Thankyou';
-import { Container } from 'react-bootstrap';
 
 function App() {
   return (
@@ -21,15 +20,15 @@ function App() {
         <Routes>
           <Route path="/thankyou" element={<ThankYou />} />
           <Route path="/teams" element={<TeamsPage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/collection" element={<CollectionPage />} />
           <Route path="/product/:id" element={<ProductDetailPage />} />
           <Route path="/cart" element={<CartPage />} />
-          <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/about" element={<AboutPage />} />
         </Routes>
       </main>
+      
+      {/* Tambahkan Footer di sini */}
       <Footer />
     </div>
   );

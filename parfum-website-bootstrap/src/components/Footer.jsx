@@ -2,7 +2,10 @@
 
 import React from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import styles from './Footer.module.css'; // Pastikan file CSS ini ada di folder yang sama
+import styles from './Footer.module.css'; 
+console.log("✅ Styles Loaded: ", styles);
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebookF, faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
 
 const Footer = () => {
   return (
@@ -13,11 +16,9 @@ const Footer = () => {
           <Col md={4} className="mb-4">
             <h5 className={styles.footerHeading}>Company</h5>
             <ul className="list-unstyled">
-              <li><a href="#" className={styles.footerLink}>About us</a></li>
+              <li><a href="#" className={styles.footerLink}>PANTEK</a></li>
               <li><a href="#" className={styles.footerLink}>Blog</a></li>
-              <li><a href="#" className={styles.footerLink}>Contact us</a></li>
               <li><a href="#" className={styles.footerLink}>Pricing</a></li>
-              <li><a href="#" className={styles.footerLink}>Testimonials</a></li>
             </ul>
           </Col>
 
@@ -27,9 +28,7 @@ const Footer = () => {
             <ul className="list-unstyled">
               <li><a href="#" className={styles.footerLink}>Help center</a></li>
               <li><a href="#" className={styles.footerLink}>Terms of service</a></li>
-              <li><a href="#" className={styles.footerLink}>Legal</a></li>
               <li><a href="#" className={styles.footerLink}>Privacy Policy</a></li>
-              <li><a href="#" className={styles.footerLink}>Status</a></li>
             </ul>
           </Col>
 
@@ -49,9 +48,16 @@ const Footer = () => {
               </Button>
             </Form>
             <div className={styles.socialIcons}>
-              <a href="#" className={styles.socialLink}><i className="fab fa-facebook-f"></i></a>
-              <a href="#" className={styles.socialLink}><i className="fab fa-twitter"></i></a>
-              <a href="#" className={styles.socialLink}><i className="fab fa-instagram"></i></a>
+              {/* 2. Ganti tag <i> dengan komponen FontAwesomeIcon */}
+              <a href="#" className={styles.socialLink}>
+                <FontAwesomeIcon icon={faFacebookF} />
+              </a>
+              <a href="#" className={styles.socialLink}>
+                <FontAwesomeIcon icon={faTwitter} />
+              </a>
+              <a href="#" className={styles.socialLink}>
+                <FontAwesomeIcon icon={faInstagram} />
+              </a>
             </div>
           </Col>
         </Row>

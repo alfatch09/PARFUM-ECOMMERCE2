@@ -1,0 +1,55 @@
+/* Navbar.css - Tema Elegan (Hitam & Emas) */
+
+/* Mengubah warna background navbar */
+.navbar.bg-light {
+  background-color: #1a1a1a !important; /* Warna hitam pekat */
+}
+
+/* Mengubah warna brand/logo */
+.navbar-brand {
+  color: #d4af37 !important; /* Warna emas */
+  transition: color 0.3s ease;
+}
+
+.navbar-brand:hover {
+  color: #fff !important; /* Warna putih saat di-hover */
+}
+
+/* Mengubah warna link navigasi */
+.nav-link {
+  color: #f0f0f0 !important; /* Warna putih keabuan */
+  margin: 0 10px;
+  transition: color 0.3s ease;
+}
+
+/* Warna link saat di-hover atau aktif */
+.nav-link:hover,
+.nav-link:focus {
+  color: #d4af37 !important; /* Warna emas saat di-hover */
+}
+
+/* Mengatur warna ikon shopping cart */
+.nav-link .fa-shopping-cart {
+  color: #f0f0f0; /* Warna ikon sama dengan link */
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover .fa-shopping-cart {
+  color: #d4af37; /* Warna ikon berubah saat link di-hover */
+}
+
+/* Mengubah warna badge notifikasi */
+.badge.bg-danger {
+  background-color: #d4af37 !important; /* Warna emas untuk badge */
+  color: #1a1a1a !important; /* Teks badge warna hitam */
+  border: 1px solid #1a1a1a;
+}
+
+/* Mengubah warna tombol toggle di tampilan mobile */
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(240, 240, 240, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+.navbar-toggler {
+  border-color: rgba(240, 240, 240, 0.3) !important;
+}

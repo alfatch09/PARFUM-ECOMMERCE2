@@ -41,44 +41,47 @@
   color: #888;
 }
 
-footer {
-  background-color: #5c4b42;
+.footer {
+  background-color: #ff5900;
   color: #e0dcd9;
   padding: 3rem 1rem 2rem;
   margin-top: 4rem;
-  border-top: 1px solid #8a7b73;
-  text-align: left;
 }
 
-footer h5 {
+.footerHeading {
   color: #ffffff;
-  margin-bottom: 1rem;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
   border-bottom: 1px solid #8a7b73;
   display: inline-block;
-  padding-bottom: 0.5rem;
+  font-size: 1.25rem;
 }
 
-footer a {
+.footerLink {
   color: #e0dcd9;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
-footer a:hover {
+.footerLink:hover {
   color: #ffffff;
   text-decoration: underline;
 }
 
-footer .emailInput {
+.emailInput {
   background-color: #ffffff;
   border: none;
   border-radius: 4px;
   padding: 0.5rem;
   width: 100%;
-  margin-bottom: 0.5rem;
+  color: #333;
 }
 
-footer .subscribeButton {
+.emailInput::placeholder {
+  color: #888888;
+}
+
+.subscribeButton {
   background-color: #6d5f57;
   color: #ffffff;
   border: none;
@@ -86,33 +89,33 @@ footer .subscribeButton {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 0.5rem;
 }
 
-footer .subscribeButton:hover {
+.subscribeButton:hover {
   background-color: #4a3c35;
 }
 
-footer .socialIcons {
+.socialIcons {
   display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-top: 1.5rem;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
-footer .socialLink {
+.socialLink {
   color: #e0dcd9;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   transition: color 0.3s ease;
 }
 
-footer .socialLink:hover {
+.socialLink:hover {
   color: #ffffff;
 }
 
-footer .footerBottom {
+.footerBottom {
   text-align: center;
   margin-top: 2rem;
-  padding-top: 1rem;
+  padding-top: 1.5rem;
   border-top: 1px solid #8a7b73;
   font-size: 0.9rem;
 }
