@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { FaShoppingCart } from 'react-icons/fa';
 import { useCart } from '../context/CartContext';
 
-// Gunakan 'as={Link}' untuk mengintegrasikan react-router dengan react-bootstrap
+// Gunakan 'as={Link}' untuk integrasi react-router dengan react-bootstrap
 const NavbarComponent = () => {
   const { getCartCount } = useCart();
   const cartCount = getCartCount();
@@ -21,6 +21,7 @@ const NavbarComponent = () => {
             <Nav.Link as={Link} to="/teams">Teams</Nav.Link>
             <Nav.Link as={Link} to="/about">About</Nav.Link>
             <Nav.Link as={Link} to="/login">Login</Nav.Link>
+            <Nav.Link as={Link} to="/register">Register</Nav.Link>  {/* Ini tambahan */}
             <Nav.Link as={Link} to="/cart" className="position-relative">
               <FaShoppingCart size={22} />
               {cartCount > 0 && (

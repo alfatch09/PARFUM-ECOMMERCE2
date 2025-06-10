@@ -1,4 +1,3 @@
-// src/pages/AdminLogin.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -7,24 +6,33 @@ const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
+
     try {
       const res = await axios.post('http://localhost:5000/api/auth/login', {
         email,
         password,
       });
 
-      if (res.data.role === 'admin') {
-        localStorage.setItem('adminToken', res.data.token);
+      const { role, token } = res.data;
+
+      if (role === 'owner') {
+        localStorage.setItem('adminToken', token);
+        localStorage.setItem('adminRole', role);
         navigate('/admin/dashboard');
       } else {
-        setError('Akses ditolak: Bukan akun admin.');
+        setError('Akses ditolak: Anda bukan pemilik / admin.');
       }
     } catch (err) {
-      setError('Login gagal: ' + err.response?.data?.message || err.message);
+      setError('Login gagal: ' + (err.response?.data?.message || err.message));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,6 +49,7 @@ const AdminLogin = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
         <div className="mb-6">
@@ -51,13 +60,17 @@ const AdminLogin = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+          disabled={loading}
+          className={`w-full py-2 rounded text-white ${
+            loading ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+          } transition`}
         >
-          Login
+          {loading ? 'Loading...' : 'Login'}
         </button>
       </form>
     </div>

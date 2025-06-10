@@ -1,113 +1,101 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { Container, Form, Button, Card, Alert, ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const AuthPage = () => {
-  const [mode, setMode] = useState('login'); // login or signup
+const LoginPage = () => {
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
+  const [errorMsg, setErrorMsg] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const user = localStorage.getItem('userInfo');
-    if (user) {
-      navigate('/');
-    }
-  }, [navigate]);
-
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
-      return;
-    }
+    setErrorMsg('');
+    setLoading(true);
 
     try {
-      const url = mode === 'login'
-        ? 'http://localhost:5000/api/users/login'
-        : 'http://localhost:5000/api/users/signup';
+      const res = await axios.post('http://localhost:5000/api/auth/login', {
+        email,
+        password,
+      });
 
-      const payload = mode === 'login'
-        ? { email, password }
-        : { name, email, password };
+      const { token, role: returnedRole } = res.data;
 
-      const response = await axios.post(url, payload);
+      localStorage.setItem('token', token);
+      localStorage.setItem('userRole', returnedRole);
 
-      const data = response.data;
-      localStorage.setItem('userInfo', JSON.stringify(data));
-      setSuccess(`${mode === 'login' ? 'Login' : 'Sign Up'} successful!`);
-      navigate('/');
+      if (returnedRole === 'owner' || returnedRole === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
-      setError(err.response?.data?.message || 'Authentication failed');
+      setErrorMsg(err.response?.data?.message || 'Login gagal');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '90vh' }}>
-      <Card style={{ width: '26rem', borderRadius: '1rem' }} className="p-4 shadow">
-        <Card.Body>
-          <h2 className="text-center mb-3">{mode === 'login' ? 'Sign In' : 'Sign Up'}</h2>
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+      <div className="card p-4 shadow" style={{ width: '100%', maxWidth: '400px' }}>
+        <h4 className="text-center mb-4"><strong>MAHA PARFUME</strong> Login</h4>
 
-          <ToggleButtonGroup type="radio" name="mode" value={mode} onChange={val => setMode(val)} className="mb-3 w-100">
-            <ToggleButton id="login" value="login" variant="outline-dark">Sign In</ToggleButton>
-            <ToggleButton id="signup" value="signup" variant="outline-dark">Sign Up</ToggleButton>
-          </ToggleButtonGroup>
+        {errorMsg && (
+          <div className="alert alert-danger" role="alert">
+            {errorMsg}
+          </div>
+        )}
 
-          {error && <Alert variant="danger">{error}</Alert>}
-          {success && <Alert variant="success">{success}</Alert>}
+        <form onSubmit={handleLogin}>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">Email address</label>
+            <input
+              type="email"
+              className="form-control"
+              id="email"
+              placeholder="Enter email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+            />
+          </div>
 
-          <Form onSubmit={handleSubmit}>
-            {mode === 'signup' && (
-              <Form.Group className="mb-3" controlId="formBasicName">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </Form.Group>
-            )}
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">Password</label>
+            <input
+              type="password"
+              className="form-control"
+              id="password"
+              placeholder="Enter password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
+            />
+          </div>
 
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Enter email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </Form.Group>
+          <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+            {loading ? 'Loading...' : 'Login'}
+          </button>
+        </form>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </Form.Group>
-
-            <Button variant="dark" type="submit" className="w-100">
-              {mode === 'login' ? 'Sign In' : 'Sign Up'}
-            </Button>
-          </Form>
-        </Card.Body>
-      </Card>
-    </Container>
+        <div className="mt-3 text-center">
+          <small>
+            Belum punya akun?{' '}
+            <Link to="/register">Register</Link>
+          </small>
+          <br />
+          <small>
+            <Link to="/forgot-password">Lupa password?</Link>
+          </small>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default AuthPage;
+export default LoginPage;

@@ -1,308 +1,213 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Tabs, Tab, Table, Image, Spinner, Button } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
-  const [products, setProducts] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [carts, setCarts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const [editingProduct, setEditingProduct] = useState(null);
-  const [formProduct, setFormProduct] = useState({
+  const [product, setProduct] = useState({
     name: '',
-    brand: '',
     price: '',
     description: '',
-    notes: '',
-    image: '',
+    brand: '',
+    countInStock: '',
+    imageFile: null,
   });
+  const [products, setProducts] = useState([]);
 
-  const navigate = useNavigate();
-
-  // ✅ Proteksi akses hanya untuk owner
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (!storedUser || storedUser.role !== 'owner') {
-      navigate('/login');
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/products');
+      setProducts(res.data);
+    } catch (err) {
+      console.error('Gagal fetch produk:', err);
+    }
+  };
+
+  const handleChange = (e) => {
+    setProduct({ ...product, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    setProduct({ ...product, imageFile: e.target.files[0] });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!product.imageFile) {
+      alert('Silakan pilih gambar terlebih dahulu');
       return;
     }
 
-    fetchAllData();
-  }, []);
-
-  const PRODUCTS_API = 'http://localhost:5001/api/products';
-  const USERS_API = 'http://localhost:5002/api/users';
-  const CART_API = 'http://localhost:5003/api/cart';
-
-  const fetchAllData = async () => {
     try {
-      setLoading(true);
-      const [prodRes, userRes, cartRes] = await Promise.all([
-        axios.get(PRODUCTS_API),
-        axios.get(USERS_API),
-        axios.get(CART_API),
-      ]);
-      setProducts(prodRes.data);
-      setUsers(userRes.data);
-      setCarts(cartRes.data);
-    } catch (error) {
-      console.error('Error fetching admin data:', error);
-      alert('Failed to fetch admin data');
-    } finally {
-      setLoading(false);
-    }
-  };
+      const formData = new FormData();
+      formData.append('image', product.imageFile);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormProduct((prev) => ({ ...prev, [name]: value }));
-  };
+      const uploadRes = await axios.post('http://localhost:5000/api/upload', formData);
+      console.log('Respons dari Upload Gambar:', uploadRes.data); // Log untuk memastikan upload berhasil
 
-  const submitProduct = async () => {
-    try {
-      if (!formProduct.name || !formProduct.brand || !formProduct.price) {
-        alert('Please fill in Name, Brand, and Price');
-        return;
+      // Pastikan ada filename dari respons upload
+      if (!uploadRes.data || !uploadRes.data.filename) {
+          alert('Server tidak mengembalikan nama file setelah upload. Cek log server /api/upload.');
+          return;
       }
 
-      if (editingProduct) {
-        await axios.put(`${PRODUCTS_API}/${editingProduct._id}`, {
-          ...formProduct,
-          price: Number(formProduct.price),
-        });
+      const productData = {
+        name: product.name,
+        price: Number(product.price),
+        description: product.description,
+        brand: product.brand,
+        countInStock: Number(product.countInStock),
+        image: uploadRes.data.filename,
+      };
+
+
+      // ================== PENTING: LOG SEBELUM MENGIRIM ==================
+      // Kita log data yang akan dikirim untuk memastikan formatnya benar
+      console.log('DATA YANG DIKIRIM KE /api/products:', productData);
+      // =================================================================
+
+      await axios.post('http://localhost:5000/api/products', productData);
+
+      alert('Produk berhasil ditambahkan!');
+      setProduct({ name: '', price: '', description: '', imageFile: null });
+      fetchProducts();
+
+    } catch (err) {
+      // ================== INI BAGIAN PALING PENTING UNTUK DEBUGGING ==================
+      console.error('GAGAL SUBMIT, MENDETEKSI ERROR...');
+
+      if (err.response) {
+        // Error datang dari server (server merespons dengan status error seperti 400, 404, 500)
+        console.error('PESAN ERROR DARI SERVER:', err.response.data);
+        console.error('STATUS CODE:', err.response.status);
+        console.error('HEADERS:', err.response.headers);
+      } else if (err.request) {
+        // Request dibuat tapi tidak ada respons yang diterima (misal: server down)
+        console.error('Tidak ada respons dari server. Cek koneksi atau status server backend.');
+        console.error('Request yang dikirim:', err.request);
       } else {
-        await axios.post(PRODUCTS_API, {
-          ...formProduct,
-          price: Number(formProduct.price),
-        });
+        // Error terjadi saat setup request
+        console.error('Error saat setup request:', err.message);
       }
-
-      await fetchAllData();
-      setEditingProduct(null);
-      setFormProduct({
-        name: '',
-        brand: '',
-        price: '',
-        description: '',
-        notes: '',
-        image: '',
-      });
-    } catch (error) {
-      console.error('Error saving product:', error);
-      alert('Failed to save product');
+      
+      // Tampilkan pesan yang lebih informatif
+      const serverMessage = err.response ? JSON.stringify(err.response.data) : err.message;
+      alert(`Gagal menambahkan produk. Cek konsol browser untuk detail.\n\nServer mengatakan: ${serverMessage}`);
+      // =============================================================================
     }
   };
-
-  const startEditProduct = (prod) => {
-    setEditingProduct(prod);
-    setFormProduct({
-      name: prod.name,
-      brand: prod.brand,
-      price: prod.price,
-      description: prod.description,
-      notes: prod.notes,
-      image: prod.image,
-    });
-  };
-
-  const cancelEdit = () => {
-    setEditingProduct(null);
-    setFormProduct({
-      name: '',
-      brand: '',
-      price: '',
-      description: '',
-      notes: '',
-      image: '',
-    });
-  };
-
-  const deleteProduct = async (id) => {
-    if (window.confirm('Are you sure to delete this product?')) {
-      try {
-        await axios.delete(`${PRODUCTS_API}/${id}`);
-        await fetchAllData();
-      } catch (error) {
-        console.error('Error deleting product:', error);
-        alert('Failed to delete product');
-      }
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    navigate('/login');
-  };
-
-  if (loading) {
-    return (
-      <Container className="text-center py-5">
-        <Spinner animation="border" />
-        <p>Loading dashboard...</p>
-      </Container>
-    );
-  }
 
   return (
-    <Container className="py-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="fw-bold">Admin Dashboard</h1>
-        <Button variant="danger" onClick={handleLogout}>Logout</Button>
-      </div>
+    // ... sisa JSX Anda tidak perlu diubah, biarkan sama seperti sebelumnya ...
+    <div className="container mt-5">
+      <h2 className="mb-4">Admin Dashboard</h2>
 
-      <Tabs defaultActiveKey="products" id="admin-tabs" className="mb-3">
-        <Tab eventKey="products" title="Products">
-          <div className="mb-4">
-            <h5>{editingProduct ? 'Edit Product' : 'Add New Product'}</h5>
-            <input
-              type="text"
-              name="name"
-              placeholder="Name"
-              value={formProduct.name}
-              onChange={handleInputChange}
-              className="form-control mb-2"
-            />
-            <input
-              type="text"
-              name="brand"
-              placeholder="Brand"
-              value={formProduct.brand}
-              onChange={handleInputChange}
-              className="form-control mb-2"
-            />
-            <input
-              type="number"
-              name="price"
-              placeholder="Price"
-              value={formProduct.price}
-              onChange={handleInputChange}
-              className="form-control mb-2"
-            />
-            <input
-              type="text"
-              name="image"
-              placeholder="Image URL"
-              value={formProduct.image}
-              onChange={handleInputChange}
-              className="form-control mb-2"
-            />
-            <textarea
-              name="description"
-              placeholder="Description"
-              value={formProduct.description}
-              onChange={handleInputChange}
-              className="form-control mb-2"
-            />
-            <textarea
-              name="notes"
-              placeholder="Notes"
-              value={formProduct.notes}
-              onChange={handleInputChange}
-              className="form-control mb-2"
-            />
-            <button className="btn btn-primary me-2" onClick={submitProduct}>
-              {editingProduct ? 'Update' : 'Add'}
-            </button>
-            {editingProduct && (
-              <button className="btn btn-secondary" onClick={cancelEdit}>
-                Cancel
-              </button>
-            )}
-          </div>
+      <form onSubmit={handleSubmit} className="mb-5">
+        <div className="mb-3">
+          <label className="form-label">Nama Produk</label>
+          <input
+            type="text"
+            name="name"
+            value={product.name}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
 
-          <Table bordered hover responsive>
-            <thead>
-              <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Brand</th>
-                <th>Price</th>
-                <th>Description</th>
-                <th>Notes</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((prod) => (
-                <tr key={prod._id}>
-                  <td>
-                    <Image
-                      src={prod.image}
-                      alt={prod.name}
-                      style={{ width: '80px', height: '80px', objectFit: 'cover' }}
-                      rounded
-                    />
-                  </td>
-                  <td>{prod.name}</td>
-                  <td>{prod.brand}</td>
-                  <td>Rp {prod.price.toLocaleString('id-ID')}</td>
-                  <td>{prod.description}</td>
-                  <td>{prod.notes}</td>
-                  <td>
-                    <button
-                      className="btn btn-sm btn-warning me-2"
-                      onClick={() => startEditProduct(prod)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn btn-sm btn-danger"
-                      onClick={() => deleteProduct(prod._id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Tab>
+        <div className="mb-3">
+          <label className="form-label">Harga</label>
+          <input
+            type="number"
+            name="price"
+            value={product.price}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
 
-        <Tab eventKey="users" title="Users">
-          <Table bordered hover responsive>
-            <thead>
-              <tr>
-                <th>Email</th>
-                <th>Username</th>
-                <th>Role</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user._id}>
-                  <td>{user.email}</td>
-                  <td>{user.username || '-'}</td>
-                  <td>{user.role || 'user'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Tab>
+        <div className="mb-3">
+          <label className="form-label">Deskripsi</label>
+          <textarea
+            name="description"
+            value={product.description}
+            onChange={handleChange}
+            className="form-control"
+            required
+          ></textarea>
+        </div>
 
-        <Tab eventKey="cart" title="Cart">
-          <Table bordered hover responsive>
-            <thead>
-              <tr>
-                <th>User</th>
-                <th>Product</th>
-                <th>Qty</th>
-              </tr>
-            </thead>
-            <tbody>
-              {carts.map((cart) => (
-                <tr key={cart._id}>
-                  <td>{cart.user?.email || 'Unknown'}</td>
-                  <td>{cart.product?.name || 'Unknown'}</td>
-                  <td>{cart.quantity}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Tab>
-      </Tabs>
-    </Container>
+        <div className="mb-3">
+          <label className="form-label">Gambar</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="form-control"
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Brand</label>
+          <input
+             type="text"
+             name="brand"
+             value={product.brand}
+              onChange={handleChange}
+             className="form-control"
+              required
+           />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Stok</label>
+          <input
+            type="number"
+            name="countInStock"
+            value={product.countInStock}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
+
+
+        <button type="submit" className="btn btn-primary">Tambah Produk</button>
+      </form>
+
+      <h4>Daftar Produk</h4>
+      <table className="table table-bordered mt-3">
+        <thead>
+          <tr>
+            <th>Gambar</th>
+            <th>Nama</th>
+            <th>Harga</th>
+            <th>Deskripsi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((prod) => (
+            <tr key={prod._id}>
+              <td>
+                <img
+                  src={`http://localhost:5000/assets/${prod.image}`}
+                  alt={prod.name}
+                  width="80"
+                />
+              </td>
+              <td>{prod.name}</td>
+              <td>Rp {prod.price}</td>
+              <td>{prod.description}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

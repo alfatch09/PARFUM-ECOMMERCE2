@@ -15,7 +15,8 @@ const ProductCard = ({ product }) => {
   return (
     <Card className="h-100 shadow-sm border-0">
       <Link to={`/product/${product._id}`}>
-        <Card.Img variant="top" src={product.image} style={{ height: '250px', objectFit: 'cover' }} />
+        <Card.Img variant="top" src={`http://localhost:5000/assets/${product.image}`}
+        style={{ height: '250px', objectFit: 'cover' }} />
       </Link>
       <Card.Body className="d-flex flex-column">
         <Card.Title className="fw-semibold">{product.name}</Card.Title>
