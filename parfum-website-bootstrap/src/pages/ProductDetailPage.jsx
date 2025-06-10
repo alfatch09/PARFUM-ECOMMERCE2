@@ -10,30 +10,34 @@ const ProductDetailPage = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchProduct = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/api/products/${id}`);
-      setProduct(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Failed to fetch product:', error);
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        console.log('Fetching product with ID:', id); // Debug
+        const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+        setProduct(response.data);
+      } catch (error) {
+        console.error('Failed to fetch product:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProduct();
   }, [id]);
 
-  const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-  }).format(amount);
+  const formatCurrency = (amount) =>
+    new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    }).format(amount);
 
   const handleAddToCart = () => {
-    addToCart(product);
-    alert(`${product.name} added to cart!`);
+    if (product) {
+      addToCart(product);
+      alert(`${product.name} added to cart!`);
+    }
   };
 
   if (loading) {
