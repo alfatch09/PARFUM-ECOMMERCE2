@@ -11,6 +11,7 @@ const AdminDashboard = () => {
     imageFile: null,
   });
   const [products, setProducts] = useState([]);
+  const [editProductId, setEditProductId] = useState(null);
 
   useEffect(() => {
     fetchProducts();
@@ -36,22 +37,15 @@ const AdminDashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!product.imageFile) {
-      alert('Silakan pilih gambar terlebih dahulu');
-      return;
-    }
-
     try {
-      const formData = new FormData();
-      formData.append('image', product.imageFile);
+      let filename = product.image;
 
-      const uploadRes = await axios.post('http://localhost:5000/api/upload', formData);
-      console.log('Respons dari Upload Gambar:', uploadRes.data); // Log untuk memastikan upload berhasil
-
-      // Pastikan ada filename dari respons upload
-      if (!uploadRes.data || !uploadRes.data.filename) {
-          alert('Server tidak mengembalikan nama file setelah upload. Cek log server /api/upload.');
-          return;
+      // Jika file gambar baru diunggah
+      if (product.imageFile) {
+        const formData = new FormData();
+        formData.append('image', product.imageFile);
+        const uploadRes = await axios.post('http://localhost:5000/api/upload', formData);
+        filename = uploadRes.data.filename;
       }
 
       const productData = {
@@ -60,124 +54,117 @@ const AdminDashboard = () => {
         description: product.description,
         brand: product.brand,
         countInStock: Number(product.countInStock),
-        image: uploadRes.data.filename,
+        image: filename,
       };
 
-
-      // ================== PENTING: LOG SEBELUM MENGIRIM ==================
-      // Kita log data yang akan dikirim untuk memastikan formatnya benar
-      console.log('DATA YANG DIKIRIM KE /api/products:', productData);
-      // =================================================================
-
-      await axios.post('http://localhost:5000/api/products', productData);
-
-      alert('Produk berhasil ditambahkan!');
-      setProduct({ name: '', price: '', description: '', imageFile: null });
-      fetchProducts();
-
-    } catch (err) {
-      // ================== INI BAGIAN PALING PENTING UNTUK DEBUGGING ==================
-      console.error('GAGAL SUBMIT, MENDETEKSI ERROR...');
-
-      if (err.response) {
-        // Error datang dari server (server merespons dengan status error seperti 400, 404, 500)
-        console.error('PESAN ERROR DARI SERVER:', err.response.data);
-        console.error('STATUS CODE:', err.response.status);
-        console.error('HEADERS:', err.response.headers);
-      } else if (err.request) {
-        // Request dibuat tapi tidak ada respons yang diterima (misal: server down)
-        console.error('Tidak ada respons dari server. Cek koneksi atau status server backend.');
-        console.error('Request yang dikirim:', err.request);
+      if (editProductId) {
+        // Update produk
+        await axios.put(`http://localhost:5000/api/products/${editProductId}`, productData);
+        alert('Produk berhasil diperbarui!');
       } else {
-        // Error terjadi saat setup request
-        console.error('Error saat setup request:', err.message);
+        // Tambah produk
+        await axios.post('http://localhost:5000/api/products', productData);
+        alert('Produk berhasil ditambahkan!');
       }
-      
-      // Tampilkan pesan yang lebih informatif
-      const serverMessage = err.response ? JSON.stringify(err.response.data) : err.message;
-      alert(`Gagal menambahkan produk. Cek konsol browser untuk detail.\n\nServer mengatakan: ${serverMessage}`);
-      // =============================================================================
+
+      setProduct({
+        name: '',
+        price: '',
+        description: '',
+        brand: '',
+        countInStock: '',
+        imageFile: null,
+        image: '',
+      });
+      setEditProductId(null);
+      fetchProducts();
+    } catch (err) {
+      console.error('Error:', err);
+      alert('Terjadi kesalahan. Lihat konsol.');
+    }
+  };
+
+  const handleEdit = (prod) => {
+    setProduct({
+      name: prod.name,
+      price: prod.price,
+      description: prod.description,
+      brand: prod.brand,
+      countInStock: prod.countInStock,
+      imageFile: null,
+      image: prod.image,
+    });
+    setEditProductId(prod._id);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Yakin ingin menghapus produk ini?')) {
+      try {
+        await axios.delete(`http://localhost:5000/api/products/${id}`);
+        alert('Produk berhasil dihapus!');
+        fetchProducts();
+      } catch (err) {
+        console.error('Gagal hapus produk:', err);
+        alert('Gagal menghapus produk.');
+      }
     }
   };
 
   return (
-    // ... sisa JSX Anda tidak perlu diubah, biarkan sama seperti sebelumnya ...
     <div className="container mt-5">
       <h2 className="mb-4">Admin Dashboard</h2>
 
       <form onSubmit={handleSubmit} className="mb-5">
+        {/* Form fields */}
         <div className="mb-3">
           <label className="form-label">Nama Produk</label>
-          <input
-            type="text"
-            name="name"
-            value={product.name}
-            onChange={handleChange}
-            className="form-control"
-            required
-          />
+          <input type="text" name="name" value={product.name} onChange={handleChange} className="form-control" required />
         </div>
 
         <div className="mb-3">
           <label className="form-label">Harga</label>
-          <input
-            type="number"
-            name="price"
-            value={product.price}
-            onChange={handleChange}
-            className="form-control"
-            required
-          />
+          <input type="number" name="price" value={product.price} onChange={handleChange} className="form-control" required />
         </div>
 
         <div className="mb-3">
           <label className="form-label">Deskripsi</label>
-          <textarea
-            name="description"
-            value={product.description}
-            onChange={handleChange}
-            className="form-control"
-            required
-          ></textarea>
+          <textarea name="description" value={product.description} onChange={handleChange} className="form-control" required />
         </div>
 
         <div className="mb-3">
           <label className="form-label">Gambar</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="form-control"
-            required
-          />
+          <input type="file" accept="image/*" onChange={handleFileChange} className="form-control" />
         </div>
 
         <div className="mb-3">
           <label className="form-label">Brand</label>
-          <input
-             type="text"
-             name="brand"
-             value={product.brand}
-              onChange={handleChange}
-             className="form-control"
-              required
-           />
+          <input type="text" name="brand" value={product.brand} onChange={handleChange} className="form-control" required />
         </div>
 
         <div className="mb-3">
           <label className="form-label">Stok</label>
-          <input
-            type="number"
-            name="countInStock"
-            value={product.countInStock}
-            onChange={handleChange}
-            className="form-control"
-            required
-          />
+          <input type="number" name="countInStock" value={product.countInStock} onChange={handleChange} className="form-control" required />
         </div>
 
-
-        <button type="submit" className="btn btn-primary">Tambah Produk</button>
+        <button type="submit" className="btn btn-primary">
+          {editProductId ? 'Update Produk' : 'Tambah Produk'}
+        </button>
+        {editProductId && (
+          <button type="button" className="btn btn-secondary ms-2" onClick={() => {
+            setEditProductId(null);
+            setProduct({
+              name: '',
+              price: '',
+              description: '',
+              brand: '',
+              countInStock: '',
+              imageFile: null,
+              image: '',
+            });
+          }}>
+            Batal Edit
+          </button>
+        )}
       </form>
 
       <h4>Daftar Produk</h4>
@@ -188,21 +175,26 @@ const AdminDashboard = () => {
             <th>Nama</th>
             <th>Harga</th>
             <th>Deskripsi</th>
+            <th>Aksi</th>
           </tr>
         </thead>
         <tbody>
           {products.map((prod) => (
             <tr key={prod._id}>
               <td>
-                <img
-                  src={`http://localhost:5000/assets/${prod.image}`}
-                  alt={prod.name}
-                  width="80"
-                />
+                <img src={`http://localhost:5000/assets/${prod.image}`} alt={prod.name} width="80" />
               </td>
               <td>{prod.name}</td>
               <td>Rp {prod.price}</td>
               <td>{prod.description}</td>
+              <td>
+                <button className="btn btn-warning btn-sm me-2" onClick={() => handleEdit(prod)}>
+                  Edit
+                </button>
+                <button className="btn btn-danger btn-sm" onClick={() => handleDelete(prod._id)}>
+                  Hapus
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

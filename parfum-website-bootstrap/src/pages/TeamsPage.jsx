@@ -1,26 +1,30 @@
-// src/pages/TeamsPage.jsx
 import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import team1 from '../assets/fanny.jpg'; // Gambar tim, bisa diganti sesuai kebutuhan
 
 const teamMembers = [
   {
     name: 'Fanny',
     role: 'Founder & CEO',
     bio: 'Fanny is the visionary behind the fragrance brand.',
-    image: team1,
+    image: 'src/assets/fanny.jpg',
   },
   {
     name: 'John Doe',
     role: 'Marketing Lead',
     bio: 'John leads all our fragrance campaigns and social media.',
-    image: team1,
+    image: 'src/assets/aal.png',
   },
   {
     name: 'Jane Smith',
     role: 'Product Designer',
     bio: 'Jane ensures every scent is crafted perfectly.',
-    image: team1,
+    image: 'src/assets/maul.jpg',
+  },
+  {
+    name: 'Jane Smith',
+    role: 'Product Designer',
+    bio: 'Jane ensures every scent is crafted perfectly.',
+    image: 'src/assets/HAQQI.jpg',
   },
 ];
 
