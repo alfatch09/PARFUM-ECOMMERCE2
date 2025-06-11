@@ -45,7 +45,12 @@ const CartPage = () => {
           <ListGroup variant="flush">
             {cartItems.map((item) => (
               <ListGroup.Item key={item.id} className="d-flex justify-content-between align-items-center">
-                <Image src={item.image} alt={item.name} style={{ width: '80px' }} rounded />
+                <Image
+                 src={item.image.startsWith('http') ? item.image : `http://localhost:5000/assets/${item.image}`}
+                 alt={item.name}
+                 style={{ width: '80px' }}
+                 rounded
+                 />
                 <div className="flex-grow-1 ms-3">
                   <h5 className="mb-0">{item.name}</h5>
                   <small className="text-muted">{formatCurrency(item.price)} x {item.quantity}</small>

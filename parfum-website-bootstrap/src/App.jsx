@@ -14,7 +14,7 @@ const PaymentPage = lazy(() => import('./pages/PaymentPage'));
 const LoginPage = lazy(() => import('./pages/AuthPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const TeamsPage = lazy(() => import('./pages/TeamsPage'));
-const ThankYou = lazy(() => import('./pages/Thankyou'));
+const Thankyou = lazy(() => import('./pages/Thankyou'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AdminLogin = lazy(() => import('./pages/AdminLogin'));
 const Register = lazy(() => import('./pages/RegisterPage'));
@@ -36,7 +36,7 @@ function App() {
               }
             />
             <Route path="/register" element={<Register />} />
-            <Route path="/thankyou" element={<ThankYou />} />
+            <Route path="/thankyou" element={<Thankyou />} />
             <Route path="/teams" element={<TeamsPage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/collection" element={<CollectionPage />} />

@@ -63,7 +63,7 @@ const ProductDetailPage = () => {
       <Row className="align-items-center">
         <Col md={6}>
           <Image
-            src={product.image}
+            src={product.image.startsWith('http') ? product.image : `http://localhost:5000/assets/${product.image}`}
             alt={product.name}
             fluid
             rounded

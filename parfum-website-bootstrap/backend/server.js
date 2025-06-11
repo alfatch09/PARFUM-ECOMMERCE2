@@ -6,7 +6,6 @@ import { fileURLToPath } from 'url';
 import multer from 'multer';
 
 import connectDB from './config/db.js';
-
 import cartRoutes from './routes/cartRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
@@ -24,11 +23,11 @@ const __dirname = path.dirname(__filename);
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(cors()); // Correctly placed here
 app.use(express.json());
 
 // Static folder untuk akses gambar
-app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
+app.use('/assets', express.static(path.join(__dirname, 'public/assets'))); // Correctly placed here
 
 // Setup multer storage & upload middleware
 const storage = multer.diskStorage({
@@ -90,8 +89,3 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-const cors = require('cors');
-app.use(cors());
-
-app.use('/assets', express.static('public/assets'));
