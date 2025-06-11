@@ -3,7 +3,7 @@ import React from 'react';
 import { Container, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-const ThankYou = () => {
+const Thankyou = () => {
   return (
     <Container className="text-center py-5">
       <h1 className="fw-bold text-success">Thank You for Your Order!</h1>
@@ -15,4 +15,4 @@ const ThankYou = () => {
   );
 };
 
-export default ThankYou;
+export default Thankyou;
