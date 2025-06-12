@@ -11,6 +11,10 @@ import LoginPage from './pages/LoginPage';
 import AboutPage from './pages/AboutPage';
 import TeamsPage from './pages/TeamsPage';
 import ThankYou from './pages/Thankyou';
+import TermsPage from './pages/TermsPage';
+import PrivacyPage from './pages/PrivacyPage';
+import HelpPage from './pages/HelpPage';
+import CareTipsPage from './pages/CareTipsPage';
 
 function App() {
   return (
@@ -25,6 +29,10 @@ function App() {
           <Route path="/collection" element={<CollectionPage />} />
           <Route path="/product/:id" element={<ProductDetailPage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/help" element={<HelpPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/care-tips" element={<CareTipsPage />} />
         </Routes>
       </main>
       

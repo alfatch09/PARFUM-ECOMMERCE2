@@ -12,12 +12,14 @@ const AboutPage = () => (
   >
     <Container className="py-5 text-center" style={{ maxWidth: '900px' }}>
       {/* Judul Utama */}
-      <h1 className="fw-bold display-5 mb-4">MAHA PARFUME</h1>
+      <h1 className="fw-bold display-5 mb-2">MAHA PARFUME</h1>
+      <h2 className="fw-normal text-uppercase mb-4" style={{ fontSize: '1.1rem', letterSpacing: '1px', color: '#666' }}>
+        The Philosophy of Maha Parfume
+      </h2>
 
       {/* Bagian Filosofi */}
       <div className="mb-5 pb-4 border-bottom" style={{ borderColor: '#eee' }}>
-        <h2 className="h4 fw-bold mb-3 text-uppercase">The Philosophy of Maha Parfume</h2>
-        <div style={{ fontFamily: "'Georgia', serif", fontSize: '1.1rem', lineHeight: '1.9', color: '#444' }}>
+        <div style={{ fontFamily: "'Georgia', serif", fontSize: '1rem', lineHeight: '2.1', color: '#444' }}>
           <p>
             At Maha Parfume, we believe that fragrance is more than just a scent—it is an invisible signature,
             a story whispered through the air, a memory captured in a single breath. Founded in March 2025,
