@@ -36,8 +36,14 @@ const HomePage = () => {
             <p className="lead mt-3 mb-1">A scent that tells your story</p>
             <div className="hero-divider my-1">―</div>
             <p className="mb-4">only at MahaParfume</p>
-            <Button as={Link} to="/collection" variant="light" size="lg">
-              Check It Out
+            <Button
+              as={Link}
+              to="/collection"
+              variant="light"
+              size="lg"
+              className="shop-now-btn"
+            >
+              Shop Now
             </Button>
           </div>
         </Container>

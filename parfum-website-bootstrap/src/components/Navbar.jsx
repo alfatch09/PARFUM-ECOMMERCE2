@@ -12,7 +12,7 @@ const NavbarComponent = () => {
   return (
     <Navbar bg="light" expand="lg" className="shadow-sm sticky-top">
       <Container className="d-flex justify-content-between align-items-center">
-        <Navbar.Brand as={Link} to="/" className="fw-bold fs-4">MAHA PARFUM</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/" className="fw-bold fs-4">MAHA PARFUME</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto align-items-center">
