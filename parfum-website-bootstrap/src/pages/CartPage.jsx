@@ -7,6 +7,7 @@ import {
 import { FaTrash } from 'react-icons/fa';
 
 const CartPage = () => {
+  
   const { cartItems, removeFromCart, getCartTotal, clearCart } = useCart();
   const [showPayment, setShowPayment] = useState(false);
   const navigate = useNavigate();

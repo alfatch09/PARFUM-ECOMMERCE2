@@ -1,24 +1,45 @@
-/* File: src/components/Footer.module.css */
-
 .footer {
   background-color: #939498 !important;
   color: white !important;
-  padding: 40px;
-  font-size: 20px;
+  padding: 8px 40px; /* Dikecilkan dari 15px ke 8px */
+  font-size: 16px;
   text-align: left;
   border-top: 5px solid #f8f8f6;
 }
 
 .footerHeading {
   color: #f8f8f6 !important;
+  font-size: 18px;
 }
 
 .footerLink {
   color: rgb(0, 0, 0) !important;
-  text-decoration: underline;
+  text-decoration-line: none;
+  text-decoration-style: solid;
 }
 
 .subscribeButton {
   background-color: #929277 !important;
   border: none;
+}
+
+.footerBottom {
+  text-align: center;
+  margin-top: 8px;   /* Dikecilkan juga dari 10px */
+  padding-top: 8px;
+  border-top: 1px solid #f8f8f6;
+}
+
+/* Menambahkan style untuk social-icons agar tidak terlalu renggang */
+.socialIcons a {
+  margin-right: 10px;
+}
+
+/* Style untuk input agar konsisten dengan ukuran tombol */
+.emailInput {
+  height: calc(1.5em + .75rem + 2px);
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
 }

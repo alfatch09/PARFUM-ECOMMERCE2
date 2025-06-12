@@ -1,4 +1,5 @@
-import fanny from './assets/fanny.jpg';
+import mendoakan from './assets/mendoakan.jpg';
+import tulalit from './assets/tulalit.jpg';
 
 export const products = [
   {
@@ -9,7 +10,7 @@ export const products = [
     description:
       'A fresh and aquatic fragrance, capturing the essence of the Mediterranean sea. Perfect for summer days.',
     notes: 'Bergamot, Neroli, Green Tangerine, Marine Notes',
-    image: fanny,
+    image: mendoakan,
   },
   {
     id: 2,
@@ -19,7 +20,7 @@ export const products = [
     description:
       'A rich, dark, and mysterious scent with a dominant oud note, blended with spices and woods.',
     notes: 'Oud Wood, Sandalwood, Cardamom, Vetiver',
-    image: fanny,
+    image: tulalit,
   },
   {
     id: 3,
@@ -29,7 +30,7 @@ export const products = [
     description:
       'A warm and sweet gourmand fragrance, featuring creamy vanilla and delicate floral blossoms.',
     notes: 'Vanilla Absolute, Orchid, Tonka Bean, Musk',
-    image: fanny,
+    image: mendoakan,
   },
   {
     id: 4,
@@ -39,6 +40,6 @@ export const products = [
     description:
       'A zesty and uplifting citrus scent that evokes a sun-drenched grove of lemon trees.',
     notes: 'Lemon, Mandarin, Basil, Cedarwood',
-    image: fanny,
+    image: tulalit,
   },
 ];
