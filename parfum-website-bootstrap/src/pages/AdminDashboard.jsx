@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import LayoutAdmin from '../components/LayoutAdmin';
 import axios from 'axios';
 
 const AdminDashboard = () => {
@@ -9,7 +10,9 @@ const AdminDashboard = () => {
     brand: '',
     countInStock: '',
     imageFile: null,
+    image: '',
   });
+
   const [products, setProducts] = useState([]);
   const [editProductId, setEditProductId] = useState(null);
 
@@ -40,7 +43,6 @@ const AdminDashboard = () => {
     try {
       let filename = product.image;
 
-      // Jika file gambar baru diunggah
       if (product.imageFile) {
         const formData = new FormData();
         formData.append('image', product.imageFile);
@@ -58,11 +60,9 @@ const AdminDashboard = () => {
       };
 
       if (editProductId) {
-        // Update produk
         await axios.put(`http://localhost:5000/api/products/${editProductId}`, productData);
         alert('Produk berhasil diperbarui!');
       } else {
-        // Tambah produk
         await axios.post('http://localhost:5000/api/products', productData);
         alert('Produk berhasil ditambahkan!');
       }
@@ -76,11 +76,12 @@ const AdminDashboard = () => {
         imageFile: null,
         image: '',
       });
+
       setEditProductId(null);
       fetchProducts();
     } catch (err) {
       console.error('Error:', err);
-      alert('Terjadi kesalahan. Lihat konsol.');
+      alert('Terjadi kesalahan.');
     }
   };
 
@@ -94,7 +95,7 @@ const AdminDashboard = () => {
       imageFile: null,
       image: prod.image,
     });
-    setEditProductId(prod._id);
+    setEditProductId(prod.id);
   };
 
   const handleDelete = async (id) => {
@@ -111,95 +112,105 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="mb-4">Admin Dashboard</h2>
-
-      <form onSubmit={handleSubmit} className="mb-5">
-        {/* Form fields */}
-        <div className="mb-3">
-          <label className="form-label">Nama Produk</label>
-          <input type="text" name="name" value={product.name} onChange={handleChange} className="form-control" required />
+    <LayoutAdmin>
+      {/* FORM TAMBAH / EDIT PRODUK */}
+      <div className="card">
+        <div className="card-header bg-primary text-white">
+          <h3 className="card-title">
+            <i className={`fas ${editProductId ? 'fa-edit' : 'fa-plus-circle'}`}></i> {editProductId ? 'Edit Produk' : 'Tambah Produk'}
+          </h3>
         </div>
+        <form onSubmit={handleSubmit}>
+          <div className="card-body">
+            <div className="form-group">
+              <label>Nama Produk</label>
+              <input type="text" name="name" className="form-control" value={product.name} onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Harga</label>
+              <input type="number" name="price" className="form-control" value={product.price} onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Deskripsi</label>
+              <textarea name="description" className="form-control" value={product.description} onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Gambar</label>
+              <input type="file" accept="image/*" className="form-control" onChange={handleFileChange} />
+            </div>
+            <div className="form-group">
+              <label>Brand</label>
+              <input type="text" name="brand" className="form-control" value={product.brand} onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Stok</label>
+              <input type="number" name="countInStock" className="form-control" value={product.countInStock} onChange={handleChange} required />
+            </div>
+          </div>
+          <div className="card-footer">
+            <button type="submit" className="btn btn-success me-2">
+              <i className={`fas ${editProductId ? 'fa-save' : 'fa-plus'}`}></i> {editProductId ? 'Update' : 'Tambah'} Produk
+            </button>
+            {editProductId && (
+              <button type="button" className="btn btn-secondary" onClick={() => {
+                setEditProductId(null);
+                setProduct({
+                  name: '',
+                  price: '',
+                  description: '',
+                  brand: '',
+                  countInStock: '',
+                  imageFile: null,
+                  image: '',
+                });
+              }}>
+                <i className="fas fa-times"></i> Batal Edit
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
 
-        <div className="mb-3">
-          <label className="form-label">Harga</label>
-          <input type="number" name="price" value={product.price} onChange={handleChange} className="form-control" required />
+      {/* TABEL PRODUK */}
+      <div className="card mt-4">
+        <div className="card-header bg-info text-white">
+          <h3 className="card-title"><i className="fas fa-boxes"></i> Daftar Produk</h3>
         </div>
-
-        <div className="mb-3">
-          <label className="form-label">Deskripsi</label>
-          <textarea name="description" value={product.description} onChange={handleChange} className="form-control" required />
+        <div className="card-body">
+          <table className="table table-bordered table-striped">
+            <thead className="thead-dark">
+              <tr>
+                <th>Gambar</th>
+                <th>Nama</th>
+                <th>Harga</th>
+                <th>Deskripsi</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((prod) => (
+                <tr key={prod.id}>
+                  <td>
+                    <img src={`http://localhost:5000/assets/${prod.image}`} alt={prod.name} width="80" />
+                  </td>
+                  <td>{prod.name}</td>
+                  <td>Rp {prod.price}</td>
+                  <td>{prod.description}</td>
+                  <td>
+                    <button className="btn btn-warning btn-sm me-2" onClick={() => handleEdit(prod)}>
+                      <i className="fas fa-edit"></i> Edit
+                    </button>
+                    <button className="btn btn-danger btn-sm" onClick={() => handleDelete(prod.id)}>
+                      <i className="fas fa-trash-alt"></i> Hapus
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-
-        <div className="mb-3">
-          <label className="form-label">Gambar</label>
-          <input type="file" accept="image/*" onChange={handleFileChange} className="form-control" />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Brand</label>
-          <input type="text" name="brand" value={product.brand} onChange={handleChange} className="form-control" required />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Stok</label>
-          <input type="number" name="countInStock" value={product.countInStock} onChange={handleChange} className="form-control" required />
-        </div>
-
-        <button type="submit" className="btn btn-primary">
-          {editProductId ? 'Update Produk' : 'Tambah Produk'}
-        </button>
-        {editProductId && (
-          <button type="button" className="btn btn-secondary ms-2" onClick={() => {
-            setEditProductId(null);
-            setProduct({
-              name: '',
-              price: '',
-              description: '',
-              brand: '',
-              countInStock: '',
-              imageFile: null,
-              image: '',
-            });
-          }}>
-            Batal Edit
-          </button>
-        )}
-      </form>
-
-      <h4>Daftar Produk</h4>
-      <table className="table table-bordered mt-3">
-        <thead>
-          <tr>
-            <th>Gambar</th>
-            <th>Nama</th>
-            <th>Harga</th>
-            <th>Deskripsi</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((prod) => (
-            <tr key={prod._id}>
-              <td>
-                <img src={`http://localhost:5000/assets/${prod.image}`} alt={prod.name} width="80" />
-              </td>
-              <td>{prod.name}</td>
-              <td>Rp {prod.price}</td>
-              <td>{prod.description}</td>
-              <td>
-                <button className="btn btn-warning btn-sm me-2" onClick={() => handleEdit(prod)}>
-                  Edit
-                </button>
-                <button className="btn btn-danger btn-sm" onClick={() => handleDelete(prod._id)}>
-                  Hapus
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      </div>
+    </LayoutAdmin>
   );
 };
 

@@ -1,20 +1,21 @@
-// config/db.js
-import mongoose from 'mongoose';
+import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
+const sequelize = new Sequelize('mahaparfum', process.env.DB_USER || 'root', process.env.DB_PASS || '', {
+  host: process.env.DB_HOST || 'localhost',
+  dialect: 'mysql',
+  logging: false,
+});
+
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/MAHAPARFUM', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log(`✅ MongoDB connected: ${conn.connection.host}`);
+    await sequelize.authenticate();
+    console.log('✅ MySQL connected successfully');
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error.message);
-    process.exit(1);
+    console.error('❌ MySQL connection error:', error.message);
   }
 };
 
-export default connectDB;
+export { sequelize, connectDB };

@@ -1,48 +1,43 @@
-import mongoose from 'mongoose';
+import { DataTypes } from 'sequelize';
 import bcrypt from 'bcrypt';
+import { sequelize } from '../config/db.js';
 
-const userSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-    password: { type: String, required: true },
-    role: {
-      type: String,
-      enum: ['user', 'owner'],
-      default: 'user',
-    },
+const User = sequelize.define('User', {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
-  { timestamps: true }
-);
-
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-
-  try {
-    // Cari user lain dengan email sama tapi role berbeda
-    const existingUser = await mongoose.models.User.findOne({
-      email: this.email,
-      role: { $ne: this.role },
-    });
-
-    if (existingUser) {
-      const isSamePassword = await bcrypt.compare(this.password, existingUser.password);
-      if (isSamePassword) {
-        return next(new Error('Password untuk role berbeda tidak boleh sama.'));
+  email: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  role: {
+    type: DataTypes.ENUM('user', 'owner'),
+    defaultValue: 'user',
+  },
+}, {
+  timestamps: false,
+  hooks: {
+    beforeCreate: async (user) => {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(user.password, salt);
+    },
+    beforeUpdate: async (user) => {
+      if (user.changed('password')) {
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(user.password, salt);
       }
     }
-
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
   }
 });
 
-userSchema.methods.matchPassword = async function (enteredPassword) {
+User.prototype.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const User = mongoose.model('User', userSchema);
 export default User;

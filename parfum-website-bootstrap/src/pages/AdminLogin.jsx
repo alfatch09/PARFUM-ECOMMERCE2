@@ -15,22 +15,24 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', {
+      const response = await axios.post('http://localhost:5000/api/auth/login', {
         email,
         password,
       });
 
-      const { role, token } = res.data;
+      const { role, token } = response.data;
 
       if (role === 'owner') {
         localStorage.setItem('adminToken', token);
         localStorage.setItem('adminRole', role);
         navigate('/admin/dashboard');
       } else {
-        setError('Akses ditolak: Anda bukan pemilik / admin.');
+        setError('Akses ditolak: Anda bukan admin/owner.');
       }
     } catch (err) {
-      setError('Login gagal: ' + (err.response?.data?.message || err.message));
+      const message =
+        err.response?.data?.message || err.response?.data?.error || 'Terjadi kesalahan saat login.';
+      setError('Login gagal: ' + message);
     } finally {
       setLoading(false);
     }
@@ -38,31 +40,37 @@ const AdminLogin = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      <form onSubmit={handleLogin} className="bg-white p-8 rounded shadow-md w-full max-w-md">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white p-8 rounded shadow-md w-full max-w-md"
+      >
         <h2 className="text-2xl font-bold mb-6 text-center">Admin Login</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
+
         <div className="mb-4">
           <label className="block mb-1">Email</label>
           <input
             type="email"
-            className="w-full border border-gray-300 rounded px-3 py-2"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="w-full border border-gray-300 rounded px-3 py-2"
             required
             disabled={loading}
           />
         </div>
+
         <div className="mb-6">
           <label className="block mb-1">Password</label>
           <input
             type="password"
-            className="w-full border border-gray-300 rounded px-3 py-2"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="w-full border border-gray-300 rounded px-3 py-2"
             required
             disabled={loading}
           />
         </div>
+
         <button
           type="submit"
           disabled={loading}
