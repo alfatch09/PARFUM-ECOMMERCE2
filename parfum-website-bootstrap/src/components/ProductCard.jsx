@@ -14,16 +14,19 @@ const ProductCard = ({ product }) => {
 
   return (
     <Card className="h-100 shadow-sm border-0">
-      <Link to={`/product/${product._id}`}>
-        <Card.Img variant="top" src={`http://localhost:5000/assets/${product.image}`}
-        style={{ height: '250px', objectFit: 'cover' }} />
+      <Link to={`/product/${product.id}`}>
+        <Card.Img
+          variant="top"
+          src={`http://localhost:5000/assets/${product.image}`}
+          style={{ height: '250px', objectFit: 'cover' }}
+        />
       </Link>
       <Card.Body className="d-flex flex-column">
         <Card.Title className="fw-semibold">{product.name}</Card.Title>
         <Card.Subtitle className="mb-2 text-muted">{product.brand}</Card.Subtitle>
         <Card.Text className="fw-bold fs-5 mt-2">{formattedPrice}</Card.Text>
         <div className="mt-auto d-flex justify-content-between">
-          <Button as={Link} to={`/product/${product._id}`} variant="outline-dark" size="sm">
+          <Button as={Link} to={`/product/${product.id}`} variant="outline-dark" size="sm">
             View Details
           </Button>
           <Button variant="dark" size="sm" onClick={() => addToCart(product)}>
