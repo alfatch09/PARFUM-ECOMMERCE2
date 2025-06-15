@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import LayoutAdmin from '../components/LayoutAdmin';
 import axios from 'axios';
+import LayoutAdmin from '../components/LayoutAdmin';
 
 const AdminDashboard = () => {
   const [product, setProduct] = useState({
@@ -9,6 +9,7 @@ const AdminDashboard = () => {
     description: '',
     brand: '',
     countInStock: '',
+    notes: '',
     imageFile: null,
     image: '',
   });
@@ -43,6 +44,7 @@ const AdminDashboard = () => {
     try {
       let filename = product.image;
 
+      // Upload gambar jika ada file baru
       if (product.imageFile) {
         const formData = new FormData();
         formData.append('image', product.imageFile);
@@ -56,6 +58,7 @@ const AdminDashboard = () => {
         description: product.description,
         brand: product.brand,
         countInStock: Number(product.countInStock),
+        notes: product.notes,
         image: filename,
       };
 
@@ -73,6 +76,7 @@ const AdminDashboard = () => {
         description: '',
         brand: '',
         countInStock: '',
+        notes: '',
         imageFile: null,
         image: '',
       });
@@ -92,6 +96,7 @@ const AdminDashboard = () => {
       description: prod.description,
       brand: prod.brand,
       countInStock: prod.countInStock,
+      notes: prod.notes || '',
       imageFile: null,
       image: prod.image,
     });
@@ -113,7 +118,7 @@ const AdminDashboard = () => {
 
   return (
     <LayoutAdmin>
-      {/* FORM TAMBAH / EDIT PRODUK */}
+      {/* FORM TAMBAH / EDIT */}
       <div className="card">
         <div className="card-header bg-primary text-white">
           <h3 className="card-title">
@@ -133,6 +138,10 @@ const AdminDashboard = () => {
             <div className="form-group">
               <label>Deskripsi</label>
               <textarea name="description" className="form-control" value={product.description} onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Notes</label>
+              <textarea name="notes" className="form-control" value={product.notes} onChange={handleChange} />
             </div>
             <div className="form-group">
               <label>Gambar</label>
@@ -160,6 +169,7 @@ const AdminDashboard = () => {
                   description: '',
                   brand: '',
                   countInStock: '',
+                  notes: '',
                   imageFile: null,
                   image: '',
                 });
@@ -184,6 +194,7 @@ const AdminDashboard = () => {
                 <th>Nama</th>
                 <th>Harga</th>
                 <th>Deskripsi</th>
+                <th>Notes</th>
                 <th>Aksi</th>
               </tr>
             </thead>
@@ -196,6 +207,7 @@ const AdminDashboard = () => {
                   <td>{prod.name}</td>
                   <td>Rp {prod.price}</td>
                   <td>{prod.description}</td>
+                  <td>{prod.notes || '-'}</td>
                   <td>
                     <button className="btn btn-warning btn-sm me-2" onClick={() => handleEdit(prod)}>
                       <i className="fas fa-edit"></i> Edit

@@ -1,5 +1,6 @@
+/* Global hero styles */
 .hero {
-  padding: 80px 0;
+  padding: 90px 0;
   text-align: center;
   background: linear-gradient(to right, #e0c3fc, #8ec5fc);
   color: #fff;
@@ -7,6 +8,22 @@
   animation: fadeIn 1s ease-in-out;
 }
 
+.hero-video-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  min-height: 400px;
+  position: relative;
+}
+
+.hero-main-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  white-space: normal; /* default: wrap on smaller screens */
+}
+/* Animation keyframes */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -15,5 +32,57 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes serashWiggle {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  15% { transform: translate(-2px, 1px) rotate(-2deg); }
+  30% { transform: translate(3px, -1px) rotate(2deg); }
+  45% { transform: translate(-3px, 2px) rotate(-3deg); }
+  60% { transform: translate(2px, -2px) rotate(2deg); }
+  75% { transform: translate(-1px, 2px) rotate(-2deg); }
+  100% { transform: translate(-3px, -1px) rotate(0deg); }
+}
+
+.shop-now-btn {
+  transition: transform 0.2s ease;
+  font-weight: bold;
+}
+
+.shop-now-btn:hover {
+  animation: serashWiggle 0.6s ease-in-out;
+}
+
+.shop-now-btn:active {
+  transform: scale(0.96);
+}
+
+/* Tablet styles (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .hero {
+    padding: 80px 0;
+  }
+
+  .hero-main-title {
+    font-size: 2rem;
+  }
+}
+
+/* Mobile styles (up to 767px) */
+@media (max-width: 767px) {
+  .hero {
+    padding: 60px 0;
+  }
+
+  .hero-main-title {
+    font-size: 1.8rem;
+  }
+}
+
+/* Large screens (desktop) */
+@media (min-width: 1200px) {
+  .hero-main-title {
+    white-space: nowrap;
   }
 }

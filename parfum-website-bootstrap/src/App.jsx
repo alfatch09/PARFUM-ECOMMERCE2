@@ -18,6 +18,11 @@ const Thankyou = lazy(() => import('./pages/Thankyou'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AdminLogin = lazy(() => import('./pages/AdminLogin'));
 const Register = lazy(() => import('./pages/RegisterPage'));
+const TermsPage = lazy(() => import('./pages/TermsPage'));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
+const HelpPage = lazy(() => import('./pages/HelpPage'));
+const CareTipsPage = lazy(() => import('./pages/CareTipsPage'));
+
 
 function App() {
   return (
@@ -45,6 +50,10 @@ function App() {
             <Route path="/payment" element={<PaymentPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/help" element={<HelpPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/care-tips" element={<CareTipsPage />} />
             <Route path="*" element={<h2>404 - Halaman Tidak Ditemukan</h2>} />
           </Routes>
         </Suspense>

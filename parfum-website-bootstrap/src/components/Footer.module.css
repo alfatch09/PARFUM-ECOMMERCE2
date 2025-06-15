@@ -1,0 +1,79 @@
+.footer {
+  background-color: #939498 !important;
+  color: white !important;
+  padding: 10px 40px; /* Dikecilkan dari 15px ke 8px */
+  font-size: 16px;
+  text-align: left;
+  border-top: 5px solid #f8f8f6;
+}
+
+.footerHeading {
+  color: #f8f8f6 !important;
+  font-size: 18px;
+}
+
+.footerLink {
+  color: rgb(0, 0, 0) !important;
+  text-decoration-line: none;
+  text-decoration-style: solid;
+}
+
+.subscribeButton {
+  background-color: #3c3c3b !important;
+  border: none;
+  padding: 6px 16px;
+  color: white;
+  margin-bottom: 12px; /* Tambahan jarak ke bawah */
+}
+
+.footerBottom {
+  text-align: center;
+  margin-top: 8px;   /* Dikecilkan juga dari 10px */
+  padding-top: 8px;
+  border-top: 1px solid #f8f8f6;
+}
+
+/* Menambahkan style untuk social-icons agar tidak terlalu renggang */
+.socialIcons a {
+  margin-right: 10px;
+  color: #f8f8f6 !important; /* Warna ikon sosial media */
+  font-size: 1.5rem; /* Ukuran ikon sosial media */
+}
+/* Style untuk input agar konsisten dengan ukuran tombol */
+.emailInput {
+  max-width: 100%;
+  width: 200px; /* Lebar tetap */
+  background-color: transparent;
+  border: 1px solid #ccc;
+  color: white;
+  border-radius: 6px;
+}
+
+.customModal {
+  border-radius: 16px;
+  padding: 10px;
+  background-color: #fefefe;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+.customModalHeader {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.modalTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #481a6f;
+}
+
+.modalBody {
+  font-size: 0.95rem;
+  color: #333;
+  padding-top: 0.5rem;
+}
+
+.modalFooter {
+  border-top: none;
+  justify-content: flex-end;
+}

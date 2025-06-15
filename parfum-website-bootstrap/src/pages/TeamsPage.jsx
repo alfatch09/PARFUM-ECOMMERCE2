@@ -1,30 +1,37 @@
+// src/pages/TeamsPage.jsx
 import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
+import './TeamsPage.css';
+
+import team1 from '../assets/aal.jpg'; 
+import team2 from '../assets/HAQQI.jpg'; 
+import team3 from '../assets/fanny.jpg'; 
+import team4 from '../assets/maul.jpg'; 
 
 const teamMembers = [
   {
-    name: 'Fanny',
-    role: 'Founder & CEO',
-    bio: 'Fanny is the visionary behind the fragrance brand.',
-    image: 'src/assets/fanny.jpg',
+    name: 'Muhammad Alfatch',
+    role: '23.11.5460',
+    bio: 'Anomali Batam',
+    image: team1,
   },
   {
-    name: 'John Doe',
-    role: 'Marketing Lead',
-    bio: 'John leads all our fragrance campaigns and social media.',
-    image: 'src/assets/aal.png',
+    name: 'Hibatulhaqqi Q.R',
+    role: '23.11.5479',
+    bio: 'Anomali Banguntapan',
+    image: team2,
   },
   {
-    name: 'Jane Smith',
-    role: 'Product Designer',
-    bio: 'Jane ensures every scent is crafted perfectly.',
-    image: 'src/assets/maul.jpg',
+    name: 'Agustina Septofanny',
+    role: '23.11.4471',
+    bio: 'Ayam Penyet',
+    image: team3,
   },
   {
-    name: 'Jane Smith',
-    role: 'Product Designer',
-    bio: 'Jane ensures every scent is crafted perfectly.',
-    image: 'src/assets/HAQQI.jpg',
+    name: 'Maulida Luthfi H', 
+    role: '23.11.5485',
+    bio: 'Cil cil cil anomali Klaten',
+    image: team4,
   },
 ];
 
@@ -33,13 +40,13 @@ const TeamsPage = () => (
     <h2 className="text-center mb-5 fw-bold">Our Team</h2>
     <Row className="g-4">
       {teamMembers.map((member, index) => (
-        <Col key={index} md={4}>
-          <Card className="text-center shadow h-100">
-            <Card.Img variant="top" src={member.image} />
-            <Card.Body>
+        <Col key={index} xs={12} sm={6} md={3} className="d-flex">
+          <Card className="text-center shadow flex-fill team-card">
+            <Card.Img variant="top" src={member.image} className="team-img" />
+            <Card.Body className="d-flex flex-column">
               <Card.Title>{member.name}</Card.Title>
               <Card.Subtitle className="mb-2 text-muted">{member.role}</Card.Subtitle>
-              <Card.Text>{member.bio}</Card.Text>
+              <Card.Text className="mt-auto">{member.bio}</Card.Text>
             </Card.Body>
           </Card>
         </Col>
