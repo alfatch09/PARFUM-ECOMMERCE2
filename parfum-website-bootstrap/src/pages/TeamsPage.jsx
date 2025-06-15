@@ -1,36 +1,35 @@
-// src/pages/TeamsPage.jsx
 import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import './TeamsPage.css';
 
-import team1 from '../assets/a_meng.jpg'; 
-import team2 from '../assets/b_meng.jpg'; 
-import team3 from '../assets/c_meng.jpg'; 
-import team4 from '../assets/d_meng.jpg'; 
+import team1 from '../assets/aal.png'; 
+import team2 from '../assets/HAQQI.jpg'; 
+import team3 from '../assets/fanny.jpg'; 
+import team4 from '../assets/maul.jpg'; 
 
 const teamMembers = [
   {
     name: 'Muhammad Alfatch',
     role: '23.11.5460',
-    bio: 'Anomali Batam',
+    bio: 'Backend Developer',
     image: team1,
   },
   {
     name: 'Hibatulhaqqi Q.R',
     role: '23.11.5479',
-    bio: 'Anomali Banguntapan',
+    bio: 'Backend Developer',
     image: team2,
   },
   {
     name: 'Agustina Septofanny',
     role: '23.11.4471',
-    bio: 'Ayam Penyet',
+    bio: 'Frontend Developer',
     image: team3,
   },
   {
     name: 'Maulida Luthfi H', 
     role: '23.11.5485',
-    bio: 'Cil cil cil anomali Klaten',
+    bio: 'Frontend Developer',
     image: team4,
   },
 ];

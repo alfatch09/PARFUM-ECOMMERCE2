@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Container, Row, Col, Image, Button, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Image, Button, Spinner, Alert } from 'react-bootstrap';
 import { useCart } from '../context/CartContext';
 import axios from 'axios';
 
@@ -9,31 +9,37 @@ const ProductDetailPage = () => {
   const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const fetchProduct = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/api/products/${id}`);
-      setProduct(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Failed to fetch product:', error);
-      setLoading(false);
-    }
-  };
+  const [error, setError] = useState('');
 
   useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+        setProduct(response.data);
+        setError('');
+      } catch (err) {
+        console.error('Failed to fetch product:', err);
+        setError('Failed to load product. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProduct();
   }, [id]);
 
-  const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-  }).format(amount);
+  const formatCurrency = (amount) =>
+    new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    }).format(amount);
 
   const handleAddToCart = () => {
-    addToCart(product);
-    alert(`${product.name} added to cart!`);
+    if (product) {
+      addToCart(product);
+      alert(`${product.name} added to cart!`);
+    }
   };
 
   if (loading) {
@@ -45,11 +51,20 @@ const ProductDetailPage = () => {
     );
   }
 
+  if (error) {
+    return (
+      <Container className="text-center py-5">
+        <Alert variant="danger">{error}</Alert>
+        <Link to="/collection">← Back to Collection</Link>
+      </Container>
+    );
+  }
+
   if (!product) {
     return (
       <Container className="text-center py-5">
         <h1 className="fw-bold">Product not found</h1>
-        <Link to="/collection">Back to Collection</Link>
+        <Link to="/collection">← Back to Collection</Link>
       </Container>
     );
   }
@@ -59,7 +74,7 @@ const ProductDetailPage = () => {
       <Row className="align-items-center">
         <Col md={6}>
           <Image
-            src={product.image}
+            src={product.image?.startsWith('http') ? product.image : `http://localhost:5000/assets/${product.image}`}
             alt={product.name}
             fluid
             rounded
@@ -76,11 +91,17 @@ const ProductDetailPage = () => {
           <p className="lead">{product.description}</p>
           <div className="my-4">
             <h5 className="fw-semibold">Scent Notes:</h5>
-            <p>{product.notes}</p>
+            <p>{product.notes || '-'}</p>
           </div>
-          <Button variant="dark" size="lg" className="w-100" onClick={handleAddToCart}>
-            Add to Cart
-          </Button>
+          {product.countInStock > 0 ? (
+            <Button variant="dark" size="lg" className="w-100" onClick={handleAddToCart}>
+              Add to Cart
+            </Button>
+          ) : (
+            <Button variant="secondary" size="lg" className="w-100" disabled>
+              Out of Stock
+            </Button>
+          )}
         </Col>
       </Row>
     </Container>

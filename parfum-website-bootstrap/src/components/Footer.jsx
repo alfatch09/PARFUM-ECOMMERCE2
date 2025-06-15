@@ -78,7 +78,7 @@ const Footer = () => {
 
             <div className={styles.socialIcons}>
               <a
-                href="https://www.facebook.com/maha.parfume"
+                href="https://www.facebook.com/mahaparfume.official"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.socialLink}

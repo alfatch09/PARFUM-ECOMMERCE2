@@ -112,7 +112,7 @@ const HelpCenter = () => {
             <h5 className="mb-3">Masih ada pertanyaan?</h5>
             <p>Hubungi kami langsung via WhatsApp untuk bantuan lebih cepat.</p>
             <a
-              href="https://wa.me/6281910908832?text=Halo%20MAHA%20PARFUME%2C%20saya%20butuh%20bantuan%20woe%20tentang%20produk%20Anda"
+              href="https://wa.me/6281910908832?text=Halo%20MAHA%20PARFUME%2C%20saya%20butuh%20bantuan%20tentang%20produk%20Anda"
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-success px-4 py-2"
