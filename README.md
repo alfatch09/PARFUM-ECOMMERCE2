@@ -1,2 +1,2 @@
 # PARFUM-ECOMMERCE2
-BLABLA
+Final Project Pemrograman Web - MAHAPARFUME
