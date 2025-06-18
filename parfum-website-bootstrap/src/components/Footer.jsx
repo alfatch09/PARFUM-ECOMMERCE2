@@ -94,7 +94,7 @@ const Footer = () => {
                 <FontAwesomeIcon icon={faTwitter} />
               </a>
               <a
-                href="https://www.instagram.com/maha.parfume"
+                href="https://www.instagram.com/mahaparfume.offi"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.socialLink}

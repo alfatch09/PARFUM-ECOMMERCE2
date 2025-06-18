@@ -17,7 +17,7 @@ const teamMembers = [
   {
     name: 'Hibatulhaqqi Q.R',
     role: '23.11.5479',
-    bio: 'Backend Developer',
+    bio: 'Desain Developer',
     image: team2,
   },
   {
